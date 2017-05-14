@@ -1,0 +1,39 @@
+<html>
+<head>
+    <title>注册</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>body{text-align: center}</style>
+    <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
+</head>
+
+<body>
+<p>用户名: <input type="text" id="username" /></p>
+<p>密  码: <input type="password" id="password" /></p>
+<button onclick="register()">提交</button>
+</body>
+
+<script>
+    function register() {
+        var myParam = {username: $("#username").val(),
+            password: $("#password").val()};
+        $.ajax({
+            url: "usermanager/register",
+            type: "post",
+            data: JSON.stringify(myParam),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                if (response.code == "0") {
+                    window.location.href = "index.html"
+                } else {
+                    alert("register failed, try again")
+                }
+            },
+            fail: function (reponse) {
+                location.reload();
+            }
+        })
+    };
+</script>
+
+</html>
