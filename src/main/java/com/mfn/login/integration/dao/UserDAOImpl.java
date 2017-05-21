@@ -3,6 +3,7 @@ package com.mfn.login.integration.dao;
 import com.mfn.common.UserDTO;
 import com.mfn.login.integration.UserDAO;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
@@ -14,6 +15,7 @@ import java.util.List;
 public class UserDAOImpl extends BaseDAO implements UserDAO {
 
     @Override
+    @Cacheable(value="select", sync=true)
     public UserDTO select(UserDTO request) throws SQLException {
         try (SqlSession session = this.getSession()){
             UserDAO mapper = session.getMapper(UserDAO.class);

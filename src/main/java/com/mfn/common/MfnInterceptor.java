@@ -2,10 +2,12 @@ package com.mfn.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,7 +19,6 @@ import java.util.Date;
 /**
  * Created by LPF on 2017/4/22.
  */
-@Component
 public class MfnInterceptor implements HandlerInterceptor{
     private static final Logger LOG = LoggerFactory.getLogger(MfnInterceptor.class);
 
@@ -33,7 +34,11 @@ public class MfnInterceptor implements HandlerInterceptor{
             response.sendRedirect(request.getContextPath()+"/index.html");
             return false;
         }
-        LOG.info("seqUtils.getNextSeq: {}", seqUtils.getNextSeq(new Date()));
+        if (seqUtils == null) {
+            LOG.debug("seqUtils is null");
+            BeanFactory beanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+            seqUtils = (SeqUtils)beanFactory.getBean("com.mfn.common.SeqUtils");
+        }
         MfnContextUtils.setSeq(seqUtils.getNextSeq(new Date()));
         return true;
     }
@@ -48,9 +53,8 @@ public class MfnInterceptor implements HandlerInterceptor{
 
     }
 
-    boolean checkMfnToken(HttpServletRequest request) throws Exception{
+    private boolean checkMfnToken(HttpServletRequest request) throws Exception{
         String url = request.getServletPath();
-        LOG.info("MfnInterceptor checkMfnToken url: {}", url);
         if ("/login".equals(url) ||
             "/usermanager/register".equals(url) ||
             "/error".equalsIgnoreCase(url)) {

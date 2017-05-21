@@ -1,7 +1,8 @@
 package com.mfn.um.controlller;
 
-import com.mfn.common.BaseMessage;
 import com.mfn.common.ErrorStatus;
+import com.mfn.common.MfnContextUtils;
+import com.mfn.common.SeqUtils;
 import com.mfn.common.UserDTO;
 import com.mfn.login.integration.UserDAO;
 import com.mfn.um.dto.RegisterReponseDTO;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 /**
  * Created by LPF on 2017/2/25.
@@ -27,6 +29,10 @@ public class UserManager {
     private static final Logger LOG = LoggerFactory.getLogger(UserManager.class);
 
     @Autowired
+    @Qualifier("com.mfn.common.SeqUtils")
+    SeqUtils seqUtils;
+
+    @Autowired
     @Qualifier("com.mfn.login.integration.UserDAO")
     UserDAO userDAO;
 
@@ -34,7 +40,7 @@ public class UserManager {
     RegisterReponseDTO register(@RequestBody RegisterRequestDTO request,
                                 HttpServletRequest httpServletRequest,
                                 HttpServletResponse httpServletResponse) {
-        LOG.info("UserManager.register request: {}", request);
+        LOG.info("{} UserManager.register request: {}", MfnContextUtils.getSeq(), request);
 
         RegisterReponseDTO responseDTO = new RegisterReponseDTO();
         UserDTO userDTO = new UserDTO();

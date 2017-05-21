@@ -25,7 +25,7 @@ public class SeqUtils {
 
     private static final long MaxSeq = 100000000L;
     private static final AtomicLong seqValue = new AtomicLong(0);
-    private static SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+    private static final SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 
     public String getNextSeq(Date date) {
         String dateStr = format.format(date);
